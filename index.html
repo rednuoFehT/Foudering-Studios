@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundering Studios</title>
+  <link rel="icon" type="image/png" href="Logo.png">
+  <style>
+    body {
+      background-color: black;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      position: relative;
+      padding-top: 40px;
+    }
+    .line {
+      position: absolute;
+      height: 2px;
+      width: 80%;
+      background-color: red;
+      box-shadow: 0 0 15px red;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .line.top { top: 5%; }
+    .line.bottom { bottom: 8%; }
+    img {
+      max-width: 700px;
+      border-radius: 12px;
+      margin-bottom: 5px;
+    }
+    input {
+      margin-top: 8px;
+      padding: 12px 20px;
+      font-size: 18px;
+      border-radius: 25px;
+      border: 2px solid red;
+      outline: none;
+      text-align: center;
+      box-shadow: 0 0 15px red;
+      background-color: black;
+      color: red;
+      text-shadow: 0 0 8px red, 0 0 15px red;
+    }
+    input::placeholder { color: red; opacity:1; text-shadow: 0 0 8px red, 0 0 15px red; }
+    input:focus { box-shadow: 0 0 25px red, 0 0 50px red; }
+    button {
+      margin-top: 12px;
+      padding: 10px 25px;
+      font-size: 18px;
+      border-radius: 25px;
+      border: none;
+      background-color: red;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 15px red, 0 0 30px red;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover { transform: scale(1.05); box-shadow: 0 0 25px red, 0 0 50px red; }
+    .message {
+      margin-top: 12px;
+      font-size: 20px;
+      display: none;
+      font-weight: bold;
+      text-shadow: 0 0 8px red, 0 0 15px red;
+    }
+    .fade {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .fade.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .final-image {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 700px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="line top"></div>
+  <div class="line bottom"></div>
+
+  <img src="Logo.png" alt="Centered Image">
+
+  <input type="text" id="username" placeholder="Enter Username" autocomplete="off">
+  <input type="password" id="password" placeholder="Enter Password">
+  <button id="enterBtn">Enter</button>
+
+  <div id="message" class="message"></div>
+  <div id="fade" class="fade"></div>
+
+  <audio id="fadeSound" src="Jingle.mp3"></audio>
+
+  <script>
+    const usernameField = document.getElementById("username");
+    const passwordField = document.getElementById("password");
+    const enterBtn = document.getElementById("enterBtn");
+    const message = document.getElementById("message");
+    const fade = document.getElementById("fade");
+    const fadeSound = document.getElementById("fadeSound");
+
+    const username = "ZXRnX2ZvdW5kZXI=";
+    const password = "Zm91bmQzcmluZ3Awd2Vy";
+
+    function login() {
+      const enteredUser = usernameField.value.trim().toLowerCase();
+      const enteredPass = passwordField.value.trim().toLowerCase();
+      const correctUsername = atob(username).toLowerCase();
+      const correctPassword = atob(password).toLowerCase();
+
+      if (enteredUser === correctUsername && enteredPass === correctPassword) {
+        message.style.display = "block";
+        message.style.color = "lime";
+        message.style.textShadow = "0 0 8px lime, 0 0 15px lime";
+        message.textContent = "Access Granted";
+
+        setTimeout(() => {
+          fade.classList.add("active");
+          fadeSound.currentTime = 0;
+          fadeSound.play();
+          fadeSound.addEventListener("ended", () => {
+            document.body.innerHTML = "";
+            const finalImg = document.createElement("img");
+            finalImg.src = "OpenDoor.png";
+            finalImg.className = "final-image";
+            document.body.appendChild(finalImg);
+          }, { once: true });
+        }, 500);
+
+      } else {
+        message.style.display = "block";
+        message.style.color = "red";
+        message.style.textShadow = "0 0 8px red, 0 0 15px red";
+        message.textContent = "Access Denied";
+        setTimeout(() => window.close(), 1000);
+      }
+    }
+
+    enterBtn.addEventListener("click", login);
+  </script>
+</body>
+</html>
